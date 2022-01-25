@@ -47,5 +47,10 @@ export class HomePage {
     },
     erro =>{});    
   }
+
+  //Cadastrar.
+  signup(){
+    this.navCtrl.push('SignupPage');
+  }
   
 }
