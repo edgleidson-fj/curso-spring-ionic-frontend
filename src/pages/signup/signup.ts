@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AlertController, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { CidadeDTO } from '../../models/cidade.dto';
 import { EstadoDTO } from '../../models/estado.dto';
 import { CidadeService } from '../../service/domain/cidade.service';
+import { ClienteService } from '../../service/domain/cliente.service';
 import { EstadoService } from '../../service/domain/estado.service';
 
 @IonicPage()
@@ -24,7 +25,9 @@ export class SignupPage {
     public navParams: NavParams,
     public formBuilder: FormBuilder,
     public cidadeService: CidadeService,
-    public estadoService: EstadoService) {
+    public estadoService: EstadoService,
+    public clienteService: ClienteService,
+    public alertCtrl: AlertController) {
 
       this.formGroup = this.formBuilder.group({
         nome: ['Joaquim', [Validators.required, Validators.minLength(5), Validators.maxLength(120)]],
@@ -67,7 +70,29 @@ export class SignupPage {
   }
 
   signupUser(){
-    console.log("Enviou o form.");
+    this.clienteService.insert(this.formGroup.value)
+      .subscribe(response => {
+        this.showInsertOk();
+      },
+      error =>{});
+  }
+
+  //Mensagem de sucesso ao salvar usuario.
+  showInsertOk(){
+    let alert = this.alertCtrl.create({
+      title:'Sucesso!',
+      message:'Cadastro realizado com sucesso.',
+      enableBackdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {
+            this.navCtrl.pop(); //Desempilhar a pagina de formulario.
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
 }
