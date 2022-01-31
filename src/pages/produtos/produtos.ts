@@ -42,4 +42,9 @@ export class ProdutosPage {
         
     }
   }
+
+  //Mostrar detalhe.
+  showDetail(){
+    this.navCtrl.push('ProdutoDetailPage');
+  }
 }
