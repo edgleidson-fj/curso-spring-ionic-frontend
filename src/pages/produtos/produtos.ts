@@ -30,7 +30,7 @@ export class ProdutosPage {
       error => {});
   }
 
-  //Carregando as URLs das imagens.
+  //Carregando as imagens.
   loadImageUrls(){
     for(var i=0; i<this.items.length; i++){
       let item = this.items[i];
