@@ -63,4 +63,9 @@ export class CartPage {
     this.navCtrl.setRoot('CategoriasPage');
   }
 
+  //Finalizar pedido.
+  checkout(){
+    this.navCtrl.push('PickAddressPage'); //Pagina de escolha de endereco.
+  }
+
 }
