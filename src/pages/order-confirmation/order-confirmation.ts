@@ -24,6 +24,8 @@ export class OrderConfirmationPage {
 
   endereco: EnderecoDTO;
 
+  codpedido: string;
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -57,21 +59,33 @@ export class OrderConfirmationPage {
     return this.cartService.total();
   } 
 
+  //Voltar para tela de carrinho.
   back(){
     this.navCtrl.setRoot('CartPage');
+  }
+
+  //Voltar para tela de categorias.
+  home(){
+    this.navCtrl.setRoot('CategoriasPage');
   }
 
   checkout(){
     this.pedidoService.insert(this.pedido)
      .subscribe(response => {
-      this.cartService.createOrClearCart(); //Limpar carrinho.
-      console.log(response.headers.get('location'));
+      this.codpedido = this.extractId(response.headers.get('location'));
+      this.cartService.createOrClearCart(); //Limpar carrinho.      
      },
      error =>{
        if(error.status == 403){
         this.navCtrl.setRoot('HomePage');
        }
      });
+  }
+
+  //Extrair o ID do pedido que esta no location. ex: http://localhost:8080/pedidos/3
+  private extractId(location : string) : string {
+    let position = location.lastIndexOf('/');//Pegar o valor a partir da ultima '/', ou seja o ID do pedido.
+    return location.substring(position +1, location.length);//Recortar entre (inicio= posicao determinada, final).
   }
 
 }
