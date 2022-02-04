@@ -22,6 +22,11 @@ export class ProdutosPage {
   }
 
   ionViewDidLoad() {
+    this.loadData();
+  }
+
+  //Carregar dados.
+  loadData(){
     let categoria_id = this.navParams.get('categoria_id'); //Pegando o parametro, que veio da pagina anterior.
     let loader = this.presentLoading(); //Iniciando Loading.
 
@@ -48,6 +53,11 @@ export class ProdutosPage {
     }
   }
 
+  //Mostrar detalhe.
+  showDetail(produto_id : string){
+    this.navCtrl.push('ProdutoDetailPage', {produto_id : produto_id});
+  }
+
     //Componente Loading.
     presentLoading() {
       let loader = this.loadingCtrl.create({
@@ -57,9 +67,12 @@ export class ProdutosPage {
       return loader;
     }
   
-  //Mostrar detalhe.
-  showDetail(produto_id : string){
-    this.navCtrl.push('ProdutoDetailPage', {produto_id : produto_id});
-  }
+    //Componente Refresher.
+    doRefresh(refresher) {
+      this.loadData();
+      setTimeout(() => {
+        refresher.complete();
+      }, 1000);
+    }
   
 }
