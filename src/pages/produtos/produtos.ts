@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, LoadingController, NavController, NavParams } from 'ionic-angular';
 import { API_CONFIG } from '../../config/api.config';
 import { ProdutoDTO } from '../../models/produto.dto';
 import { ProdutoService } from '../../service/domain/produto.service';
@@ -17,17 +17,23 @@ export class ProdutosPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    public produtoService: ProdutoService) {
+    public produtoService: ProdutoService,
+    public loadingCtrl: LoadingController) {
   }
 
   ionViewDidLoad() {
     let categoria_id = this.navParams.get('categoria_id'); //Pegando o parametro, que veio da pagina anterior.
+    let loader = this.presentLoading(); //Iniciando Loading.
+
     this.produtoService.findByCategoria(categoria_id)
       .subscribe(response => {
+        loader.dismiss(); //Finalizando Loading.
         this.items = response['content'];
         this.loadImageUrls();
       },
-      error => {});
+      error => {
+        loader.dismiss();
+      });
   }
 
   //Carregando as imagens.
@@ -38,13 +44,22 @@ export class ProdutosPage {
         .subscribe(response => {
           item.imageUrl = `${API_CONFIG.bucketBaseUrl}/prod${item.id}-small.jpg`
         },
-        error => {});
-        
+        error => {});        
     }
   }
 
+    //Componente Loading.
+    presentLoading() {
+      let loader = this.loadingCtrl.create({
+        content: "Aguarde..."
+      });
+      loader.present();
+      return loader;
+    }
+  
   //Mostrar detalhe.
   showDetail(produto_id : string){
     this.navCtrl.push('ProdutoDetailPage', {produto_id : produto_id});
   }
+  
 }
