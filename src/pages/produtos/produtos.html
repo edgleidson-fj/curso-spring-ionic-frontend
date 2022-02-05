@@ -8,7 +8,6 @@
 </ion-header>
 
 <ion-content padding>
-
   <!-- Refresher -->
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
@@ -26,4 +25,9 @@
       <p>{{item.preco | currency}}</p>
     </button>
   </ion-list>
+
+  <!-- Infinite Scroll-->
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>  
 </ion-content>

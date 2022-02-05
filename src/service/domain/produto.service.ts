@@ -14,8 +14,8 @@ export class ProdutoService{
         return this.http.get<ProdutoDTO>(`${API_CONFIG.baseUrl}/produtos/${produto_id}`);
     }
 
-    findByCategoria(categoria_id: string){
-        return this.http.get(`${API_CONFIG.baseUrl}/produtos/?categorias=${categoria_id}`);
+    findByCategoria(categoria_id : string, page : number = 0, linesPerPage : number = 24){ //Pagina por padrao 0 e linhas por pagina padrao 24;
+        return this.http.get(`${API_CONFIG.baseUrl}/produtos/?categorias=${categoria_id}&page=${page}&linesPerPage=${linesPerPage}`);
     }
 
     //Pegar a imagem pequena do bucket - Amazon S3.

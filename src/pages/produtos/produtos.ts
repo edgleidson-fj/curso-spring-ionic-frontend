@@ -11,8 +11,10 @@ import { ProdutoService } from '../../service/domain/produto.service';
 })
 export class ProdutosPage {
 
-  //Colecao.
-  items: ProdutoDTO[];
+  //Colecao iniciando vazia para concatenar as respostas.
+  items: ProdutoDTO[] = []; 
+
+  page: number = 0;
 
   constructor(
     public navCtrl: NavController, 
@@ -30,11 +32,13 @@ export class ProdutosPage {
     let categoria_id = this.navParams.get('categoria_id'); //Pegando o parametro, que veio da pagina anterior.
     let loader = this.presentLoading(); //Iniciando Loading.
 
-    this.produtoService.findByCategoria(categoria_id)
+    this.produtoService.findByCategoria(categoria_id, this.page, 10) //Buscar de 10 em 10.
       .subscribe(response => {
-        loader.dismiss(); //Finalizando Loading.
-        this.items = response['content'];
-        this.loadImageUrls();
+        let inicio = this.items.length; //Tamanho que a lista tinha.
+        this.items = this.items.concat(response['content']); //Concatenando a resposta.
+        let fim = this.items.length - 1; //Tamanho que a lista tem agora, menos 1.
+        loader.dismiss(); //Finalizando Loading.      
+        this.loadImageUrls(inicio, fim);
       },
       error => {
         loader.dismiss();
@@ -42,8 +46,8 @@ export class ProdutosPage {
   }
 
   //Carregando as imagens.
-  loadImageUrls(){
-    for(var i=0; i<this.items.length; i++){
+  loadImageUrls(inicio: number, fim: number){
+    for(var i=inicio; i<=fim; i++){
       let item = this.items[i];
       this.produtoService.getSmallImageFromBucket(item.id)
         .subscribe(response => {
@@ -69,9 +73,20 @@ export class ProdutosPage {
   
     //Componente Refresher.
     doRefresh(refresher) {
+      this.page = 0;
+      this.items = []; //lista vazia..
       this.loadData();
       setTimeout(() => {
         refresher.complete();
+      }, 1000); //1 segundo.
+    }
+
+    //Componente Infinite Scroll.
+    doInfinite(infiniteScroll) {
+      this.page++;
+      this.loadData();
+      setTimeout(() => {
+        infiniteScroll.complete();
       }, 1000);
     }
   
