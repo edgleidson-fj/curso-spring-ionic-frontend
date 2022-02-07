@@ -28,6 +28,11 @@ export class ProfilePage {
   }
 
   ionViewDidLoad() {
+    this.loadData();
+  }
+
+  //Carregar dados.
+  loadData(){
     let localUser = this.storage.getLocalUser();
     if(localUser && localUser.email){//localUser && localUserEmail existem. 
       this.clienteService.findByEmail(localUser.email)
@@ -57,7 +62,6 @@ export class ProfilePage {
   
   //Pegar imagem da camera.
   getCameraPicture() {
-
     this.cameraOn = true; //Camera ligada.
 
     const options: CameraOptions = {
@@ -74,4 +78,18 @@ export class ProfilePage {
     });
   }
 
+  //Enviar imagem.
+  sendPicture(){
+    this.clienteService.uploadPicture(this.picture)
+      .subscribe(response => {
+        this.picture = null;
+        this.loadData();
+      },
+      error => {});
+  }
+
+  //Descartar imagem.
+  cancel(){
+    this.picture = null;
+  }
 }

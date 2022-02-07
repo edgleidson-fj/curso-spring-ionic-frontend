@@ -15,6 +15,7 @@ import { ClienteService } from '../service/domain/cliente.service';
 import { AuthInterceptorProvider } from '../interceptors/auth-interceptor';
 import { ProdutoService } from '../service/domain/produto.service';
 import { CartService } from '../service/domain/cart.service';
+import { ImageUtilService } from '../service/image-util.service';
 
 
 @NgModule({
@@ -30,7 +31,7 @@ import { CartService } from '../service/domain/cart.service';
   entryComponents: [
     MyApp
   ],
-  providers: [
+  providers: [ //Declaracao de Providers.
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
@@ -41,7 +42,8 @@ import { CartService } from '../service/domain/cart.service';
     StorageService,
     ClienteService,
     ProdutoService,
-    CartService
+    CartService,
+    ImageUtilService
   ]
 })
 export class AppModule {}
